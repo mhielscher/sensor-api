@@ -1,0 +1,3 @@
+[submodule "HTU21D"]
+	path = HTU21D
+	url = https://github.com/jasiek/HTU21D.git
