@@ -1,0 +1,1 @@
+These are example Arduino sketches for D1 mini (ESP8266) endpoint devices. My own Network of Things uses code based on these sketches for endpoints that can sense and control multiple things - e.g. the D1 mini on my windowsill controls a dimmable strip of LEDs and a relay controlling a mains lamp, and can return temperature and humidity information from an HTU21D sensor.
