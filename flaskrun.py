@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # flaskrun.py from Flask Snippets #133
 # http://flask.pocoo.org/snippets/133/
 

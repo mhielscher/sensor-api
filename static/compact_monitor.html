@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Temperatures</title>
+        <!--<meta name="description" content="">-->
+        <meta name="HandheldFriendly" content="True">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/yegor256/tacit/gh-pages/tacit-css-1.3.3.min.css">
+        <style>
+            .footnote {
+                font-size: 67%;
+                font-style: italic;
+            }
+
+            td.temperature {
+                text-align: right;
+            }
+
+            td.humidity {
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Temperatures</h1>
+        <table>
+            <th>
+                <td>Temperature</td>
+                <td>Relative Humidity</td>
+            </th>
+            <tr id="balcony">
+                <td>Balcony</td>
+                <td class="temperature">--.-º F</td>
+                <td class="humidity">--.-% RH</td>
+            </tr>
+            <tr id="desk">
+                <td>Matt's Desk</td>
+                <td class="temperature">--.-º F</td>
+                <td class="humidity">--.-% RH</td>
+            </tr>
+        </table>
+        <p id="updated" class="footnote">Not loaded.</p>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        function formatDecimal(value, count) {
+            var scale = 10*count;
+            var roundedValue = Math.round((value+0.0001)*scale)/scale;
+            return parseFloat(roundedValue).toFixed(count);
+        }
+
+        function updateSensors() {
+            $.get("/temp/desk?units=F", function (data) {
+                $("#desk .temperature").text(formatDecimal(data.temperature, 1)+"º F");
+                $("#desk .humidity").text(formatDecimal(data.humidity, 1)+"% RH");
+            });
+            $.get("/temp/balcony?units=F", function (data) {
+                $("#balcony .temperature").text(formatDecimal(data.temperature, 1)+"º F");
+                $("#balcony .humidity").text(formatDecimal(data.humidity, 1)+"% RH");
+            });
+            $("#updated").text("Last updated "+(new Date()));
+        }
+        $(window).on("load", function () {
+            updateSensors();
+            setInterval(updateSensors, 30000);
+        });
+    </script>
+</html>
+
+

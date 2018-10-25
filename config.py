@@ -9,5 +9,8 @@ nondimmable_endpoints = {"floor":   "http://192.168.1.10/floor",
 dimmable_endpoints = {"window": "http://192.168.1.10/window",
                       "door":   "http://192.168.1.13/"}
 
+# Endpoints attached to switches
+switch_endpoints = {"wall": "http://192.168.1.10/switch"}
+
 # HTU21D (temp/humidity) upstream IPs
 htu_endpoints = {"window": "http://192.168.1.10/temp"}

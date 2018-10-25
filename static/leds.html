@@ -11,8 +11,6 @@
         <meta name="HandheldFriendly" content="True" />
         <meta name="viewport" content="width=device-width" />
         <link rel="canonical" href="http://192.168.0.205/static/leds" />
-        
-        <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
 
         <style type="text/css">
             #targetBrightness {
@@ -21,10 +19,76 @@
         </style>
     </head>
     <body>
-        <form id="changebrightness" action="http://192.168.1.10/window" method="POST">
-            <label for="">Set brightness to:</label> <input type="text" name="brightness" value="0"><br />
-            <input id="setButton" type="submit" value="Set Brightness" />
+        <form id="changebrightness" action="http://192.168.0.210/" method="POST">
+            <label for="">Set brightness to:</label> <input type="text" id="brightness" name="brightness" value="0"><br>
+            <input id="setButton" type="submit" value="Set Brightness"><br><br>
+            <input id="ledsOnButton" type="button" value="LEDs On">
+            <input id="ledsOffButton" type="button" value="LEDs Off"><br>
+            <br><br>
+            <input id="lampOnButton" type="button" value="Lamp On">
+            <input id="lampOffButton" type="button" value="Lamp Off"><br>
         </form>
     </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        function correctRange() {
+            if ($("#brightness").val() < 0)
+                $("#brightness").val(0);
+            else if ($("#brightness").val() > 1023)
+                $("#brightness").val(1023);
+        }
 
+        $("#brightness").on("blur", function (event) {
+            correctRange();
+        });
+
+        $("form").on("submit", function (event) {
+            correctRange();
+            $.ajax({
+                    method: "PUT",
+                    url: "/lights/window",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({brightness: $("input[name=brightness]").val()})
+            });
+            event.preventDefault();
+            return false;
+        });
+
+        $("#ledsOnButton").on("click", function () {
+            $("#brightness").val(1023);
+            $("form").submit();
+        });
+
+        $("#ledsOffButton").on("click", function () {
+            $("#brightness").val(0);
+            $("form").submit();
+        });
+
+        $('#lampOnButton').on("click", function () {
+            $.ajax({
+                    method: "PUT",
+                    url: "/lights/main",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({state: "on"})
+            });
+        });
+
+        $('#lampOffButton').on("click", function () {
+            $.ajax({
+                    method: "PUT",
+                    url: "/lights/main",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({state: "off"})
+            });
+        });
+
+        $(window).on("load", function () {
+            $.get("/lights/window", function (data) {
+                $("#brightness").val(data.brightness);
+            });
+        });
+    </script>
 </html>
